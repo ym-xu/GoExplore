@@ -1,4 +1,4 @@
 module.exports = {
-    googleApiKey: 'AIzaSyBakRo5icOIFav6O8B-tgNQWm4SahOlU-k',
+    googleApiKey: 'YOUR_GOOGLE_API_KEY',
     port: 3000
 };
