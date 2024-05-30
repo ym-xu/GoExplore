@@ -2,6 +2,7 @@
 
 # Structure
 
+```
 travel-assistant/
 ├── client/
 │   ├── public/
@@ -31,3 +32,4 @@ travel-assistant/
 ├── places/
 │   └── (place JSON files)
 └── README.md
+```
