@@ -1,6 +1,6 @@
+# ⛩️ GoExplore
 
-
-# Structure
+## Structure
 
 ```
 travel-assistant/

@@ -3,10 +3,11 @@ const config = require('../config');
 const fileHandler = require('../utils/fileHandler');
 
 exports.getPlaces = async (lat, lon) => {
+    console.log('Getting places near', lat, lon);
     const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
         params: {
             location: `${lat},${lon}`,
-            radius: 3000,
+            radius: 300,
             type: 'restaurant',
             key: config.googleApiKey
         },
@@ -18,6 +19,7 @@ exports.getPlaces = async (lat, lon) => {
     });
 
     const places = response.data.results;
+    console.log('Places:', places);
     for (const place of places) {
         const placeDetails = {
             name: place.name,
@@ -42,6 +44,7 @@ exports.getPlaces = async (lat, lon) => {
         placeDetails.phone = details.formatted_phone_number;
         placeDetails.opening_hours = details.opening_hours;
         placeDetails.reviews = details.reviews;
+        console.log(placeDetails)
 
         await fileHandler.savePlaceDetails(place.place_id, placeDetails);
     }
