@@ -1,5 +1,13 @@
 # ⛩️ GoExplore
 
+## Development Plan
+
+ [ ] crawler classes 
+ [ ] multimodal data crawler
+ [ ] document classify
+ [ ] structured response
+ [ ] ...
+ 
 ## Structure
 
 ```

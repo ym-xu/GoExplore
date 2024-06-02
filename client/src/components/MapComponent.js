@@ -18,7 +18,7 @@ function MapComponent() {
         };
         setLocation(coords);
 
-        fetch(`/api/places?lat=${34.6769151}&lon=${135.5696549}`)
+        fetch(`/api/places?lat=${52.1696046}&lon=${4.5166707}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
