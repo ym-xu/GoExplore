@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 function MapComponent() {
     const [location, setLocation] = useState(null);
+    const [query, setQuery] = useState('');
 
-    const getLocation = () => {
+    const handleSearch = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
         } else {
@@ -17,8 +18,11 @@ function MapComponent() {
             longitude: position.coords.longitude
         };
         setLocation(coords);
+        fetchPlaces(coords);
+    };
 
-        fetch(`/api/places?lat=${52.1696046}&lon=${4.5166707}`)
+    const fetchPlaces = (coords) => {
+        fetch(`/api/places?lat=${34.663087}&lon=${135.5351935}&query=${encodeURIComponent(query)}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -48,7 +52,13 @@ function MapComponent() {
 
     return (
         <div>
-            <button onClick={getLocation}>Get Nearby Places</button>
+            <input
+                type="text"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Enter your search query..."
+            />
+            <button onClick={handleSearch}>Search Nearby Places</button>
             {location && (
                 <p>
                     Latitude: {location.latitude}, Longitude: {location.longitude}

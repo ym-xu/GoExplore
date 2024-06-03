@@ -1,10 +1,10 @@
 const googlePlacesService = require('../services/googlePlacesService');
 
 exports.getNearbyPlaces = async (req, res) => {
-    const { lat, lon } = req.query;
+    const { lat, lon, query } = req.query;
 
     try {
-        const places = await googlePlacesService.getPlaces(lat, lon);
+        const places = await googlePlacesService.getPlaces(lat, lon, query);
         console.log('Places:', places);
         res.json(places);
     } catch (error) {

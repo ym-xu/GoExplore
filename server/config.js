@@ -1,4 +1,5 @@
 module.exports = {
-    googleApiKey: 'YOUR_GOOGLE_API_KEY',
-    port: 3000
+    googleApiKey: "GOOGLE_API_KEY",
+    port: 3000,
+    openAiApiKey: "OPENAI_API_KEY"
 };

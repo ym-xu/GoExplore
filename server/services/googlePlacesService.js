@@ -1,18 +1,18 @@
 const axios = require('axios');
 const config = require('../config');
 const fileHandler = require('../utils/fileHandler');
+const llmService = require('./llmService');
 
-exports.getPlaces = async (lat, lon) => {
-    console.log('Getting places near', lat, lon);
-    const types = ['restaurant', 'cafe', 'bar', 'night_club', 'movie_theater'];
+exports.getPlaces = async (lat, lon, query) => {
+    const keywords = await llmService.generateKeywordsFromQuery(query);
     const allPlaces = [];
 
-    for (const type of types) {
+    for (const keyword of keywords) {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
             params: {
                 location: `${lat},${lon}`,
-                radius: 1000,
-                type: type,
+                radius: 500,
+                keyword: keyword,
                 key: config.googleApiKey
             },
             proxy: {
