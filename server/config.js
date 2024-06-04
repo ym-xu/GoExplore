@@ -1,9 +1,7 @@
+require('dotenv').config();
+
 module.exports = {
-    googleApiKey: '',
-    port: 3000,
-    openAiApiKey: "",
-    openaiBaseURL: "",
-    openaiEndpoint: "",
-    proxyHost: '',
-    proxyPort: 7890
+    googleApiKey: process.env.GOOGLE_API_KEY,
+    port: process.env.PORT,
+    openAiApiKey: process.env.openAiApiKey,
 };

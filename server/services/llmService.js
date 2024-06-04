@@ -4,11 +4,12 @@ const axios = require('axios');
 
 const openai = new OpenAI({
     apiKey: config.openaiApiKey,
-    baseURL: `${config.openaiBaseURL}/${config.openaiEndpoint}`
+    baseURL: 'https://gateway.ai.cloudflare.com/v1/d4c6cd72f6192b6d992c8c58b4c67f09/goexpore/openai'
 });
 
 exports.generateKeywordsFromQuery = async (query) => {
     console.log('start generateKeywordsFromQuery: ', query);
+    
     try {
         const prompt = `Given a user's question about recommendations for eating, drinking, or entertainment activities, generate a list of relevant keywords...`;
         console.log('Sending request to OpenAI with prompt:', prompt);

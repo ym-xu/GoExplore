@@ -4,6 +4,7 @@ const fileHandler = require('../utils/fileHandler');
 const llmService = require('./llmService');
 
 exports.getPlaces = async (lat, lon, query) => {
+    console.log('config:', config);
     const keywords = await llmService.generateKeywordsFromQuery(query);
     const cleanedKeywords = keywords[0]
         .split('\n')
@@ -18,13 +19,13 @@ exports.getPlaces = async (lat, lon, query) => {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
             params: {
                 location: `${lat},${lon}`,
-                radius: 100,
+                radius: 10,
                 keyword: keyword,
                 key: config.googleApiKey
             },
             proxy: {
-                host: config.proxyHost,
-                port: config.proxyPort,
+                host: '127.0.0.1',
+                port: 7890,
                 protocol: 'http'
             }
         });
@@ -47,8 +48,8 @@ exports.getPlaces = async (lat, lon, query) => {
                     key: config.googleApiKey
                 },
                 proxy: {
-                    host: config.proxyHost,
-                    port: config.proxyPort,
+                    host: '127.0.0.1',
+                    port: 7890,
                     protocol: 'http'
                 }
             });
