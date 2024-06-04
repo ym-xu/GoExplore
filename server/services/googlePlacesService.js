@@ -5,32 +5,38 @@ const llmService = require('./llmService');
 
 exports.getPlaces = async (lat, lon, query) => {
     const keywords = await llmService.generateKeywordsFromQuery(query);
+    const cleanedKeywords = keywords[0]
+        .split('\n')
+        .map(keyword => keyword.replace('-', '').trim())
+        .filter(keyword => keyword.length > 0);
+
+    console.log('Cleaned Keywords:', cleanedKeywords);
+
     const allPlaces = [];
 
-    for (const keyword of keywords) {
+    for (const keyword of cleanedKeywords) {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
             params: {
                 location: `${lat},${lon}`,
-                radius: 500,
+                radius: 100,
                 keyword: keyword,
                 key: config.googleApiKey
             },
             proxy: {
-                host: '127.0.0.1',
-                port: 7890,
+                host: config.proxyHost,
+                port: config.proxyPort,
                 protocol: 'http'
             }
         });
 
         const places = response.data.results;
-        console.log(`${type} Places:`, places);
 
         for (const place of places) {
             const placeDetails = {
                 name: place.name,
                 rating: place.rating,
                 address: place.vicinity,
-                type: type, 
+                type: keyword, // Use the keyword as the type
                 place_id: place.place_id
             };
 
@@ -41,8 +47,8 @@ exports.getPlaces = async (lat, lon, query) => {
                     key: config.googleApiKey
                 },
                 proxy: {
-                    host: '127.0.0.1',
-                    port: 7890,
+                    host: config.proxyHost,
+                    port: config.proxyPort,
                     protocol: 'http'
                 }
             });
@@ -58,8 +64,8 @@ exports.getPlaces = async (lat, lon, query) => {
                 placeDetails.photoUrl = photoUrl;
             }
 
-            console.log(`${type} Place Details:`, placeDetails);
-            await fileHandler.savePlaceDetails(placeDetails, type);
+            console.log(`${keyword} Place Details:`, placeDetails);
+            await fileHandler.savePlaceDetails(placeDetails, keyword);
             if (placeDetails.photoUrl) {
                 await fileHandler.savePhotoUrl(placeDetails.place_id, placeDetails.photoUrl);
             }
