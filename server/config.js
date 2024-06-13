@@ -1,7 +1,6 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-module.exports = {
-    googleApiKey: process.env.GOOGLE_API_KEY,
-    port: process.env.PORT,
-    openAiApiKey: process.env.openAiApiKey,
-};
+export const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+export const port = process.env.PORT;
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;

@@ -1,15 +1,10 @@
-const express = require('express');
+import express from 'express';
+
+import { handlePlacesRequest } from './controllers/placesController.js';
+
 const app = express();
-const placesRoutes = require('./routes/placesRoutes');
-const config = require('./config');
-const cors = require('cors');
 
-app.use(cors()); 
+app.get('/api/places', handlePlacesRequest);
 
-app.use(express.static('../client/public'));
-
-app.use('/api/places', placesRoutes);
-
-app.listen(config.port, () => {
-    console.log(`Server running at http://localhost:${config.port}`);
-});
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

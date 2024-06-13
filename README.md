@@ -5,8 +5,10 @@
 - [x] crawler multiple classes 
 - [x] multimodal data crawler
 - [x] document classify
+- [ ] document embedding 
+- [ ] RAG with LangChain
 - [ ] structured response
-- [ ] ...
+- [ ] 
  
 ## Multimodal report generation
 

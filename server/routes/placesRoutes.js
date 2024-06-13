@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import placesController from '../controllers/placesController.js';
+
 const router = express.Router();
-const placesController = require('../controllers/placesController');
 
 router.get('/', placesController.getNearbyPlaces);
 

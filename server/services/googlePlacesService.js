@@ -1,11 +1,11 @@
-const axios = require('axios');
-const config = require('../config');
-const fileHandler = require('../utils/fileHandler');
-const llmService = require('./llmService');
+import axios from 'axios';
+import { GOOGLE_API_KEY } from '../config.js';
+import { savePlaceDetails, savePhotoUrl } from '../utils/fileHandler.js';
+import { generateKeywordsFromQuery } from './llmService.js';  // Assuming llmService.js uses named export
 
-exports.getPlaces = async (lat, lon, query) => {
-    console.log('config:', config);
-    const keywords = await llmService.generateKeywordsFromQuery(query);
+export async function getPlaces(lat, lon, query) {
+    
+    const keywords = await generateKeywordsFromQuery(query);
     const cleanedKeywords = keywords[0]
         .split('\n')
         .map(keyword => keyword.replace('-', '').trim())
@@ -13,15 +13,15 @@ exports.getPlaces = async (lat, lon, query) => {
 
     console.log('Cleaned Keywords:', cleanedKeywords);
 
-    const allPlaces = [];
+    let allPlaces = [];
 
     for (const keyword of cleanedKeywords) {
         const response = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json`, {
             params: {
                 location: `${lat},${lon}`,
-                radius: 10,
+                radius: 100,
                 keyword: keyword,
-                key: config.googleApiKey
+                key: GOOGLE_API_KEY
             },
             proxy: {
                 host: '127.0.0.1',
@@ -33,19 +33,11 @@ exports.getPlaces = async (lat, lon, query) => {
         const places = response.data.results;
 
         for (const place of places) {
-            const placeDetails = {
-                name: place.name,
-                rating: place.rating,
-                address: place.vicinity,
-                type: keyword, // Use the keyword as the type
-                place_id: place.place_id
-            };
-
             const detailsResponse = await axios.get(`https://maps.googleapis.com/maps/api/place/details/json`, {
                 params: {
                     place_id: place.place_id,
                     fields: 'formatted_phone_number,opening_hours,reviews,photos',
-                    key: config.googleApiKey
+                    key: GOOGLE_API_KEY
                 },
                 proxy: {
                     host: '127.0.0.1',
@@ -55,24 +47,28 @@ exports.getPlaces = async (lat, lon, query) => {
             });
 
             const details = detailsResponse.data.result;
-            placeDetails.phone = details.formatted_phone_number;
-            placeDetails.opening_hours = details.opening_hours;
-            placeDetails.reviews = details.reviews;
+            const placeDetails = {
+                name: place.name,
+                rating: place.rating,
+                address: place.vicinity,
+                type: keyword,
+                place_id: place.place_id,
+                phone: details.formatted_phone_number,
+                opening_hours: details.opening_hours ? details.opening_hours.weekday_text : [],
+                open_now: details.opening_hours ? details.opening_hours.open_now : false,
+                reviews: details.reviews ? details.reviews.map(review => ({
+                    author_name: review.author_name,
+                    rating: review.rating,
+                    relative_time_description: review.relative_time_description,
+                    text: review.text,
+                    time: review.time
+                })) : []
+            };
 
-            if (details.photos && details.photos.length > 0) {
-                const photoReference = details.photos[0].photo_reference;
-                const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${config.googleApiKey}`;
-                placeDetails.photoUrl = photoUrl;
-            }
+            await savePlaceDetails(placeDetails, keyword);
 
-            console.log(`${keyword} Place Details:`, placeDetails);
-            await fileHandler.savePlaceDetails(placeDetails, keyword);
-            if (placeDetails.photoUrl) {
-                await fileHandler.savePhotoUrl(placeDetails.place_id, placeDetails.photoUrl);
-            }
+            allPlaces.push(placeDetails);
         }
-
-        allPlaces.push(...places);
     }
     return allPlaces;
-};
+}

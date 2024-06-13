@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function MapComponent() {
     const [location, setLocation] = useState(null);
     const [query, setQuery] = useState('');
+    const [recommendation, setRecommendation] = useState('');
 
     const handleSearch = () => {
         if (navigator.geolocation) {
@@ -18,10 +19,10 @@ function MapComponent() {
             longitude: position.coords.longitude
         };
         setLocation(coords);
-        fetchPlaces(coords);
+        fetchPlaces(coords.latitude, coords.longitude);
     };
-
-    const fetchPlaces = (coords) => {
+    
+    const fetchPlaces = (latitude, longitude) => {
         fetch(`/api/places?lat=${34.663087}&lon=${135.5351935}&query=${encodeURIComponent(query)}`)
             .then(response => {
                 if (!response.ok) {
@@ -29,7 +30,10 @@ function MapComponent() {
                 }
                 return response.json();
             })
-            .then(data => console.log('Places:', data))
+            .then(data => {
+                console.log('Places fetched and recommendations generated:', data);
+                setRecommendation(data.recommendation); // Assuming the backend directly sends the recommendation
+            })
             .catch(error => console.error('Error:', error));
     };
 
@@ -62,6 +66,11 @@ function MapComponent() {
             {location && (
                 <p>
                     Latitude: {location.latitude}, Longitude: {location.longitude}
+                </p>
+            )}
+            {recommendation && (
+                <p>
+                    Recommendation: {recommendation}
                 </p>
             )}
         </div>

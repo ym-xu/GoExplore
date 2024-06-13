@@ -1,17 +1,17 @@
-const OpenAI = require("openai");
-const config = require('../config');
-const axios = require('axios');
+import OpenAI from 'openai';
+import { OPENAI_API_KEY } from '../config.js';
+import axios from 'axios';
 
 const openai = new OpenAI({
-    apiKey: config.openaiApiKey,
+    apiKey: OPENAI_API_KEY,
     baseURL: 'https://gateway.ai.cloudflare.com/v1/d4c6cd72f6192b6d992c8c58b4c67f09/goexpore/openai'
 });
 
-exports.generateKeywordsFromQuery = async (query) => {
-    console.log('start generateKeywordsFromQuery: ', query);
+export async function generateKeywordsFromQuery(query) {
+    console.log('Start generateKeywordsFromQuery:', query);
     
     try {
-        const prompt = `Given a user's question about recommendations for eating, drinking, or entertainment activities, generate a list of relevant keywords...`;
+        const prompt = `Given a user's question about recommendations for eating, drinking, or entertainment activities, generate a concise list of 5 to 7 relevant keywords, focusing on diversity and minimal repetition.`;
         console.log('Sending request to OpenAI with prompt:', prompt);
 
         const response = await openai.chat.completions.create({
@@ -44,4 +44,4 @@ exports.generateKeywordsFromQuery = async (query) => {
         }
         throw new Error('Failed to generate keywords: ' + error.message);
     }
-};
+}
