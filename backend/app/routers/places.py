@@ -3,8 +3,9 @@
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 from app.services.openai_service import generate_keywords_from_query
-from app.services.places_service import fetch_nearby_places
+from app.services.places_id_service import fetch_nearby_places
 from app.services.recommendation_service import generate_recommendations
+from app.services.places_details_service import fetch_place_reviews
 
 router = APIRouter()
 
@@ -18,13 +19,19 @@ class UserQuery(BaseModel):
 async def get_recommendations(user_query: UserQuery):
     print("start with query: ", user_query.query)
     try:
-        # 生成关键词
+        # keywords generation
         keywords = await generate_keywords_from_query(user_query.query)
         print("keywords: ", keywords)
-        # 查询附近店铺
+        # search nearby
         places = fetch_nearby_places(user_query.lat, user_query.lon, keywords)
         # print("places: ", places)
-        # 生成推荐
+        # detail (reviews and photos) extraction
+        for place in places:
+            reviews = fetch_place_reviews(place['place_id'])
+            place['reviews'] = reviews
+        
+        print("places with details: ", places)
+        # recommendation generation
         # recommendation = generate_recommendations(user_query.query, places)
         # return {"recommendation": recommendation}
     except Exception as e:

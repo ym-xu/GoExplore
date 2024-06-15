@@ -43,10 +43,12 @@ def fetch_nearby_places(lat: float, lon: float, keywords: list):
                     all_places.append(place_info)
         else:
             print(f"Error fetching places for keyword {keyword}: {response.status_code} {response.text}")
-
-    if len(all_places) > max_places:
-        all_places.sort(key=lambda x: x.get('user_ratings_total', 0), reverse=True)
-        all_places = all_places[:max_places]
+            
+    try:
+        if len(all_places) > max_places:
+            all_places.sort(key=lambda x: x.get('user_ratings_total', 0), reverse=True)
+            all_places = all_places[:max_places]
+    except Exception as e:
+        print(f"Exception while trimming all_places: {e}")
     
-    print(len(all_places))
     return all_places

@@ -28,3 +28,6 @@ document_db/
 
 # VSCode settings
 .vscode/
+
+# py cache files
+__pycache__/
