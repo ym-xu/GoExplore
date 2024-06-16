@@ -5,10 +5,13 @@
 - [x] crawler multiple classes 
 - [x] multimodal data crawler
 - [x] document classify
-- [ ] document embedding 
-- [ ] RAG with LangChain
-- [ ] structured response
-- [ ] 
+- [x] document embedding 
+- [x] RAG with Single LangChain
+- [ ] Conversational RAG 
+- [ ] structured response,and backtrack KB
+- [ ] Multimodal Conversational RAG 
+- [ ] Demo Tokyo City 
+- [ ] Frontend Design
  
 ## Multimodal report generation
 
@@ -32,20 +35,21 @@ travel-assistant/
 │   │   └── index.js
 │   ├── package.json
 │   └── README.md
-├── server/
-│   ├── controllers/
-│   │   └── placesController.js
+├── backend/app
 │   ├── routes/
-│   │   └── placesRoutes.js
+│   │   └── places_routes.py
 │   ├── services/
-│   │   └── googlePlacesService.js
-│   ├── utils/
-│   │   └── fileHandler.js
-│   ├── app.js
-│   ├── config.js
-│   ├── package.json
+│   │   ├── vector_qa_service.py
+│   │   ├── openai_service.py
+│   │   ├── places_id_service.py
+│   │   ├── places_details_service.py
+│   │   └── recommendation_service.py
+│   ├── main.py
+│   ├── .env
+│   ├── config.py
+│   ├── requirements.txt
 │   └── README.md
-├── places/
+├── document_db/
 │   └── (place JSON files)
 └── README.md
 ```
