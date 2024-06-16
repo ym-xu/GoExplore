@@ -5,6 +5,7 @@ gmap_api_key = settings.GOOGLE_API_KEY
 max_places = int(settings.MAX_PLACES)
 
 def fetch_nearby_places(lat: float, lon: float, keywords: list):
+    print(f"Fetching nearby places for lat: {lat}, lon: {lon}...")
     unique_place_ids = set()
     all_places = []
 
@@ -34,11 +35,9 @@ def fetch_nearby_places(lat: float, lon: float, keywords: list):
                     place_info = {
                         "place_id": place_id,
                         "name": place.get('name'),
-                        "location": place.get('geometry', {}).get('location'),
                         "open_now": place.get('opening_hours', {}).get('open_now'),
                         "rating": place.get('rating'),
                         "user_ratings_total": user_ratings_total,
-                        "vicinity": place.get('vicinity')
                     }
                     all_places.append(place_info)
         else:

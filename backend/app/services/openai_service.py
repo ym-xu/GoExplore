@@ -1,26 +1,23 @@
-import openai
+from langchain_openai import ChatOpenAI
 from app.config import settings
-
-openai.api_key = settings.OPENAI_API_KEY
 
 PREDEFINED_KEYWORDS = ["Cafe", "Restaurant", "Bar"]
 
 async def generate_keywords_from_query(query: str):
+    llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
     prompt = (
         f"Given a user's question '{query}' and the following predefined list of keywords:\n\n"
         f"{', '.join(PREDEFINED_KEYWORDS)}\n\n"
         "select the 3 to 5 most relevant keywords that match the user's query. Ensure the keywords are diverse and cover different aspects of the query."
     )
+    
+    print(f"Calling OpenAI API with prompt: {prompt}")
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-            max_tokens=100,
-        )
+        response = await llm.apredict(prompt, max_tokens=100)
 
-        if response and response.choices and response.choices[0].message:
-            message_content = response.choices[0].message['content'].strip()
+        if response:
+            message_content = response.strip()
             keywords = parse_keywords(message_content)
             return keywords
         else:
