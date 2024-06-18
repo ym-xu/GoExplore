@@ -11,7 +11,14 @@
 - [ ] structured response,and backtrack KB
 - [ ] Multimodal Conversational RAG 
 - [ ] Demo Tokyo City 
-- [ ] Frontend Design
+- [ ] Frontend Design [Figma Draft](https://www.figma.com/design/mYIstag6StC19YfB3SvVco/Untitled?node-id=0-1&t=NK1vXb6j7xrn23pn-1)
+
+### Demo Development
+- [x] place_id extraction
+- [ ] details extraction
+- [ ] reviews and picture extraction
+
+
  
 ## Multimodal report generation
 
