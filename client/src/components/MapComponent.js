@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 
 function ConversationComponent() {
     const [query, setQuery] = useState('');
-    const [lat, setLat] = useState(34.663087);
-    const [lon, setLon] = useState(135.5351935);
+    // const [lat, setLat] = useState(34.663087);
+    // const [lon, setLon] = useState(135.5351935);
+    const [lat, setLat] = useState(52.3749025);
+    const [lon, setLon] = useState(4.8541134);
     const [conversationId, setConversationId] = useState('default');
     const [conversation, setConversation] = useState([]);
 

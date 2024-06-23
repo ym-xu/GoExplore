@@ -1,7 +1,7 @@
 from langchain_openai import ChatOpenAI
 from app.config import settings
 
-PREDEFINED_KEYWORDS = ["Cafe", "Restaurant", "Bar"]
+PREDEFINED_KEYWORDS = ["Cafe", "Restaurant", "Bar", "Bakery", 'canelé']
 
 async def generate_keywords_from_query(query: str):
     llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
